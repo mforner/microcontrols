@@ -353,7 +353,7 @@ function create_dialog()
    d.button_get_position = dialog:add_button(
       "Get Pos", click_get_position, 2,9)
    d.label_remain = dialog:add_label(
-      "Remain: --", 3,9)
+      "Remain: --", 3,9,2,1)
 
    d.label_duration = dialog:add_label(
       "--",1,10)
