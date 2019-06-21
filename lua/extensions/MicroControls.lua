@@ -60,7 +60,7 @@ MSG_INFO = 0
 MSG_ERR = 1
 MSG_WARN = 2
 MSG_DEBUG = 3
-VERSION="1.05"
+VERSION="1.06"
 MICROCONTROLS="Micro Controls" .. " " .. "v" .. VERSION
 
 --[[
@@ -254,6 +254,10 @@ function click_get_position()
    if input then
       local secs = vlc.var.get(input, "time")
       d.label_position:set_text(timestamp(secs));
+	   if vlc.input.is_playing()  then
+		  local secstotal = vlc.input.item():duration()
+		  d.label_remain:set_text("Remain: -" .. timestamp(secstotal-secs))
+	   end
    else
       lg("no input", MSG_WARN)
    end
@@ -348,6 +352,8 @@ function create_dialog()
       "--", 1,9)
    d.button_get_position = dialog:add_button(
       "Get Pos", click_get_position, 2,9)
+   d.label_remain = dialog:add_label(
+      "Remain: --", 3,9,2,1)
 
    d.label_duration = dialog:add_label(
       "--",1,10)
