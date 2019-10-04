@@ -1,8 +1,8 @@
 --[[ "MicroControls.lua"
     Extension Information:
         Name: Micro Controls
-        Version: 1.0
-        Author: Marcel Hinsch
+        Version: 1.07
+        Author: Marcel Hinsch, Enhancments by Michael Mehnert & Mario Forner
         Website: http://addons.videolan.org/content/show.php?content=160547
         Description: A small Controll Window to Control your VLC Player. More Features to come.
 ]]--
@@ -60,7 +60,7 @@ MSG_INFO = 0
 MSG_ERR = 1
 MSG_WARN = 2
 MSG_DEBUG = 3
-VERSION="1.05"
+VERSION="1.07"
 MICROCONTROLS="Micro Controls" .. " " .. "v" .. VERSION
 
 --[[
@@ -69,7 +69,7 @@ MICROCONTROLS="Micro Controls" .. " " .. "v" .. VERSION
 function descriptor()
 	return {
         title = "Micro Controls";
-        version = "";
+        version = "1.07";
         author = "";
         url = "https://";
         -- version = "1.0";
@@ -252,8 +252,12 @@ end
 function click_get_position()
    local input = vlc.object.input()
    if input then
-      local secs = vlc.var.get(input, "time")
+      local secs = vlc.var.get(input, "time")/1000000
       d.label_position:set_text(timestamp(secs));
+	   if vlc.input.is_playing()  then
+		  local secstotal = vlc.input.item():duration()
+		  d.label_remain:set_text("Remain: -" .. timestamp(secstotal-secs))
+	   end
    else
       lg("no input", MSG_WARN)
    end
@@ -348,6 +352,8 @@ function create_dialog()
       "--", 1,9)
    d.button_get_position = dialog:add_button(
       "Get Pos", click_get_position, 2,9)
+   d.label_remain = dialog:add_label(
+      "Remain: --", 3,9,2,1)
 
    d.label_duration = dialog:add_label(
       "--",1,10)
